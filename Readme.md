@@ -17,3 +17,38 @@ The goal is to reduce complexity and make it more SOLID.
 - ❗Incorporate exception handling with at least one custom exception.
 - ❗Refactor to allow creation of small testable units.
 - ❗Write a simple Javadoc with essential information for one or more of the newly created methods or classes.
+
+#### Result
+
+- Patterns :: Here I apply Strategy pattern, where PaymentType interface define a set of methods that earch payment type must to implement, the VisaPaymentType and MasterCardPaymentType implement this interface and we have for each a different implementation of discount method, also from SOLID I use S from single responsibility, from pattern and SOLID allows easier maintenance because is possible to add new payment types without modifying existing code
+- Performance :: To improve the performance using streams instead of loops for better efficiency and readability, caching the total number of products in the order to avoid recalculating many times, using bigdecimal to avoud precision issues when use double values. Exception :: I create a OrderPaymentTypeException, is thrown when a paymnet type is not supported
+- TESTING :: I created also JUnit tests for payOrder() with different scenarios
+- JavaDoc :: For each class the necessary Java document was added so that it can be understood
+
+- Class
+Order, PaymentType, MasterCardPaymentType, VisaPaymentType, Product, ProductFactory
+
+- Exceptions
+OrderPaymentTypeException
+
+- Test
+OrderTest
+ProductGeneratorTest; To test this also need PayOrderSimulator, ProductGenerator
+
+
+- Run test
+mvn clean test
+
+Expected result
+
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running coe.unosquare.benefits.order.OrderTest
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.063 s - in coe.unosquare.benefits.order.OrderTest
+[INFO] Running coe.unosquare.benefits.util.ProductGeneratorTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0 s - in coe.unosquare.benefits.util.ProductGeneratorTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0
