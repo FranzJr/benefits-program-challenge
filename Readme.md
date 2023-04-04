@@ -25,22 +25,32 @@ The goal is to reduce complexity and make it more SOLID.
 - TESTING :: I created also JUnit tests for payOrder() with different scenarios
 - JavaDoc :: For each class the necessary Java document was added so that it can be understood
 
-- Class
-Order, PaymentType, MasterCardPaymentType, VisaPaymentType, Product, ProductFactory
+#### Detailed Info
 
-- Exceptions
-OrderPaymentTypeException
+##### Class
+- Order
+- PaymentType
+- MasterCardPaymentType
+- VisaPaymentType
+- Product
+- ProductFactory
 
-- Test
-OrderTest
-ProductGeneratorTest; To test this also need PayOrderSimulator, ProductGenerator
+##### Exceptions
+- OrderPaymentTypeException
+
+##### Test
+- OrderTest
+- ProductGeneratorTest; To test this also need PayOrderSimulator, ProductGenerator
 
 
-- Run test
+##### Run test
+```json
 mvn clean test
+```
 
-Expected result
+- Expected result
 
+```java
 [INFO] -------------------------------------------------------
 [INFO]  T E S T S
 [INFO] -------------------------------------------------------
@@ -52,3 +62,4 @@ Expected result
 [INFO] Results:
 [INFO] 
 [INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0
+```
