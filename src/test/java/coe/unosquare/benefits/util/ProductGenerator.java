@@ -24,7 +24,8 @@ public final class ProductGenerator {
     /**
      * Hide constructor to avoid instances of this utility class.
      */
-    private ProductGenerator() { }
+    private ProductGenerator() {
+    }
 
     /**
      * Generate products map.
@@ -36,11 +37,11 @@ public final class ProductGenerator {
     public static Map<Product, Integer> generateProducts(final Integer expectedSize) {
         HashMap<Product, Integer> products = new HashMap<>();
         IntStream.rangeClosed(1, expectedSize).forEach(id -> {
-            products.put(new Product("Product " + id, //product name
-                            Double.parseDouble(new DecimalFormat("0.00")
-                                                .format(new Random().nextDouble() * 10.00)), //price
-                            new Random().nextInt(3) + 1), //type
-                    1); //quantity
+            products.put(new Product("Product " + id, // product name
+                    Double.parseDouble(new DecimalFormat("0.00")
+                            .format(new Random().nextDouble() * 10.00)), // price
+                    new Random().nextInt(3) + 1), // type
+                    1); // quantity
         });
         return products;
     }
@@ -48,7 +49,8 @@ public final class ProductGenerator {
     /**
      * Generate products map.
      *
-     * @param expectedTotal the expected total amount to pay for the order before discount
+     * @param expectedTotal the expected total amount to pay for the order before
+     *                      discount
      * @return the map
      */
     public static Map<Product, Integer> generateProducts(final Double expectedTotal) {
@@ -57,13 +59,19 @@ public final class ProductGenerator {
         int id = 1;
         while (total < expectedTotal) {
             double price = Double.parseDouble(new DecimalFormat("0.00")
-                                                .format(new Random().nextDouble() * 10.00));
+                    .format(new Random().nextDouble() * 10.00));
             int quantity = new Random().nextInt(5) + 1;
-            products.put(new Product("Product " + id, //product name
-                            price,
-                            new Random().nextInt(3) + 1), //type
-                    quantity); //quantity
-            total = total + price * quantity;
+            Product product = new Product("Product " + id, price, new Random().nextInt(3) + 1);
+            double productTotal = price * quantity;
+            if (total + productTotal > expectedTotal) {
+                quantity = (int) Math.floor((expectedTotal - total) / price);
+                if (quantity == 0) {
+                    break;
+                }
+                productTotal = price * quantity;
+            }
+            products.put(product, quantity);
+            total += productTotal;
             id++;
         }
         return products;

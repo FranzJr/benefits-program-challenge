@@ -9,6 +9,8 @@
 package coe.unosquare.benefits.util;
 
 import coe.unosquare.benefits.order.Order;
+import coe.unosquare.benefits.order.OrderPaymentTypeException;
+import coe.unosquare.benefits.payment.PaymentType;
 import coe.unosquare.benefits.product.Product;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -21,7 +23,8 @@ public final class PayOrderSimulator {
     /**
      * Hide constructor to avoid instances of this utility class.
      */
-    private PayOrderSimulator() { }
+    private PayOrderSimulator() {
+    }
 
     /**
      * Method to simulate the process of an order being paid.
@@ -29,17 +32,18 @@ public final class PayOrderSimulator {
      * @param products    the products
      * @param paymentType the payment type
      * @return the double
+     * @throws OrderPaymentTypeException
      */
     public static Double payOrder(final Map<Product, Integer> products,
-                                  final String paymentType) {
+            final PaymentType paymentType) throws OrderPaymentTypeException {
         Order order = new Order(products);
         Double subtotal = products.entrySet()
-                            .stream()
-                            .mapToDouble(product -> product.getKey().getPrice() * product.getValue())
-                            .sum();
+                .stream()
+                .mapToDouble(product -> product.getKey().getPrice() * product.getValue())
+                .sum();
         return new BigDecimal((subtotal - order.pay(paymentType)) / subtotal)
                 .setScale(2, RoundingMode.HALF_EVEN)
                 .doubleValue();
     }
-}
 
+}

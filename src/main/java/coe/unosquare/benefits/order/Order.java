@@ -8,6 +8,9 @@
 
 package coe.unosquare.benefits.order;
 
+import coe.unosquare.benefits.payment.MasterCardPaymentType;
+import coe.unosquare.benefits.payment.PaymentType;
+import coe.unosquare.benefits.payment.VisaPaymentType;
 import coe.unosquare.benefits.product.Product;
 import java.util.Map;
 
@@ -32,42 +35,26 @@ public class Order {
      *
      * @param paymentType the payment type
      * @return the double
+     * @throws OrderPaymentTypeException
      */
-    public Double pay(final String paymentType) {
-        Double discount;
-        if (paymentType.equals("Visa")) {
-            if (products.values()
-                    .stream()
-                    .reduce(0, (totalProductCount, quantity) -> totalProductCount += quantity) >= 10) {
-                discount = 0.15;
-            } else if (products.values()
-                    .stream()
-                    .reduce(0, (totalProductCount, quantity) -> totalProductCount += quantity) >= 7) {
-                discount = 0.10;
-            } else {
-                discount = 0.05;
-            }
-        } else if (paymentType.equals("Mastercard")) {
-            if (products.entrySet()
-                    .stream()
-                    .mapToDouble(product -> product.getKey().getPrice() * product.getValue())
-                    .sum() >= 100) {
-                discount = 0.17;
-            } else if (products.entrySet().stream()
-                    .mapToDouble(product -> product.getKey().getPrice() * product.getValue())
-                    .sum() >= 75) {
-                discount = 0.12;
-            } else {
-                discount = 0.08;
-            }
-        } else {
-            discount = 0.0;
+    public Double pay(final PaymentType paymentType) throws OrderPaymentTypeException {
+
+        if (!(paymentType instanceof VisaPaymentType || paymentType instanceof MasterCardPaymentType)) {
+            throw new OrderPaymentTypeException("Unsupported payment type: " + paymentType.getClass().getSimpleName());
         }
-        double subtotal = products.entrySet()
-                            .stream()
-                            .mapToDouble(product -> product.getKey().getPrice() * product.getValue())
-                            .sum();
-        return subtotal - subtotal * discount;
+
+        Integer totalProducts = products.values()
+                .stream()
+                .reduce(0, (totalProductCount, quantity) -> totalProductCount += quantity);
+
+        Double totalAmount = products.entrySet()
+                .stream()
+                .mapToDouble(product -> product.getKey().getPrice() * product.getValue())
+                .sum();
+
+        Double discount = paymentType.applyDiscount(totalProducts, totalAmount);
+
+        return totalAmount - totalAmount * discount;
     }
 
     /**

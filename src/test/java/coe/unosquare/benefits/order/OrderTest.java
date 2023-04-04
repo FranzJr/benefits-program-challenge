@@ -8,6 +8,9 @@
 
 package coe.unosquare.benefits.order;
 
+import coe.unosquare.benefits.payment.MasterCardPaymentType;
+import coe.unosquare.benefits.payment.PaymentType;
+import coe.unosquare.benefits.payment.VisaPaymentType;
 import coe.unosquare.benefits.product.Product;
 import coe.unosquare.benefits.util.ProductGenerator;
 import org.junit.jupiter.api.Test;
@@ -19,24 +22,78 @@ class OrderTest {
     @Test
     void orderWithVisaMoreThan10ProductsDiscountTest() {
         Map<Product, Integer> products = ProductGenerator.generateProducts(15);
-        assertEquals(0.15, payOrder(products, "Visa"));
+        PaymentType visaPaymentType = new VisaPaymentType();
+        try {
+            assertEquals(0.15, payOrder(products, visaPaymentType));
+        } catch (OrderPaymentTypeException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
     void orderWithVisa10ProductsDiscountTest() {
         Map<Product, Integer> products = ProductGenerator.generateProducts(10);
-        assertEquals(0.15, payOrder(products, "Visa"));
+        PaymentType visaPaymentType = new VisaPaymentType();
+        try {
+            assertEquals(0.15, payOrder(products, visaPaymentType));
+        } catch (OrderPaymentTypeException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
     void orderWithVisa7ProductsDiscountTest() {
         Map<Product, Integer> products = ProductGenerator.generateProducts(7);
-        assertEquals(0.10, payOrder(products, "Visa"));
+        PaymentType visaPaymentType = new VisaPaymentType();
+        try {
+            assertEquals(0.10, payOrder(products, visaPaymentType));
+        } catch (OrderPaymentTypeException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
     void orderWithVisaLessThan7ProductsDiscountTest() {
         Map<Product, Integer> products = ProductGenerator.generateProducts(5);
-        assertEquals(0.05, payOrder(products, "Visa"));
+        PaymentType visaPaymentType = new VisaPaymentType();
+        try {
+            assertEquals(0.05, payOrder(products, visaPaymentType));
+        } catch (OrderPaymentTypeException e) {
+            e.printStackTrace();
+        }
     }
+
+    @Test
+    void orderWithMasterCardGreaterThan100Test() {
+        Map<Product, Integer> products = ProductGenerator.generateProducts(200.0);
+        PaymentType masterCardPaymentType = new MasterCardPaymentType();
+        try {
+            assertEquals(0.17, payOrder(products, masterCardPaymentType));
+        } catch (OrderPaymentTypeException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    void orderWithMasterCardBetween75And100Test() {
+        Map<Product, Integer> products = ProductGenerator.generateProducts(85.0);
+        PaymentType masterCardPaymentType = new MasterCardPaymentType();
+        try {
+            assertEquals(0.12, payOrder(products, masterCardPaymentType));
+        } catch (OrderPaymentTypeException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    void orderWithMasterCardLessThan75Test() {
+        Map<Product, Integer> products = ProductGenerator.generateProducts(50.0);
+        PaymentType masterCardPaymentType = new MasterCardPaymentType();
+        try {
+            assertEquals(0.08, payOrder(products, masterCardPaymentType));
+        } catch (OrderPaymentTypeException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
